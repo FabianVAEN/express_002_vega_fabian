@@ -67,18 +67,3 @@ express_02/
 
 ### Eliminar producto
 - DELETE http://localhost:4000/api/products/1
-
-## Modelo de producto 
-
-Modelo base para un producto:
-
-    ```bash
-    {
-    "id": 1,              // Generado automáticamente
-    "name": "Laptop",     // Requerido
-    "price": 999.99,      // Requerido, número positivo
-    "stock": 10,          // Requerido, número positivo
-    "sku": "LAP-1234"     // Requerido, único
-    }
-    ```
-
