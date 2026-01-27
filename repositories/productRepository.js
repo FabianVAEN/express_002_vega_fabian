@@ -1,7 +1,8 @@
 class ProductRepository {
     constructor() {
         this.products = [
-            { id: 1, name: "Laptop", 
+            { id: 1, 
+                name: "Laptop", 
                 price: 999, 
                 stock: 10, 
                 sku: "LAP-1234" },
@@ -18,7 +19,7 @@ class ProductRepository {
         ]
     }
 
-// Todo repositorio debe tener al menos los siguientes parametros
+// Todo repositorio debe tener al menos los siguientes parámetros
 
     findAll() {
         return this.products

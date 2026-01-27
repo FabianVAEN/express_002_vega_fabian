@@ -25,4 +25,29 @@ router.post('/',(req,res)=>{
     res.status(201).json(newProduct)
 })
 
+router.put('/:id', (req, res) => {
+    try {
+        const result = productService.update(req.params.id, req.body);
+        res.json(result);
+    } catch (error) {
+        res.status(error.status || 500).json({
+            message: error.message || 'Error interno del servidor'
+        });
+    }
+});
+
+router.delete('/:id', (req, res) => {
+    try {
+        const result = productService.delete(req.params.id);
+        res.json({
+            message: `Producto con ID ${req.params.id} eliminado exitosamente`,
+            product: result
+        });
+    } catch (error) {
+        res.status(error.status || 500).json({
+            message: error.message || 'Error interno del servidor'
+        });
+    }
+});
+
 module.exports = router // En este punto exportamos nuestro archivo
