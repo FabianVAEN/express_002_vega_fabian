@@ -1,28 +1,22 @@
-// const { Pool } = require('pg');
+const Product = require('./models/Product')
 
-// class ProductRepository {
-//     constructor() {
-//         this.pool = new Pool({
-//             user: 'postgres',
-//             host: 'localhost',
-//             database: 'products_db',
-//             password: 'postgres',
-//             port: 5437
-//         })
-//     }
+class ProductRepository {
 
-//     // Todo repositorio debe tener al menos los siguientes parámetros
-//     async findAll() {
-//         // Deberiamos de ejecutar una query que haga una búsqueda de todos los productos
-//         const result = await this.pool.query('SELECT * FROM products')
-//         return result.rows
-//     }
+    // Todo repositorio debe tener al menos los siguientes parámetros
+    async findAll() {
+        const products = await Product.findAll({
+            order:[["id","ASC"]]
+        })
+        console.log(products)
+        return products
+        // return products.map(p => p.toJSON())
+    }
 
-//     // Buscar producto por ID
-//     async findById(id) {
-//         const result = await this.pool.query('SELECT * FROM products WHERE id = $1', [id])
-//         return result.rows[0]
-//     }
+    // Buscar producto por ID
+    async findById(id) {
+        const product = await Product.findByPk(id)
+        return product
+    }}
 
 //     // Buscar producto por SKU
 //     async findBySku(sku) {
@@ -94,10 +88,9 @@
 //     }
 // }
 
-// module.exports = new ProductRepository()
+module.exports = new ProductRepository()
 
-// //ORM - Object relation mapping
-// //Herramientas que nos permiten mapear objetos de nuestro lenguaje de programación a tablas en bases de datos relacionales
-// //Ejemplos: Sequelize, TypeORM, Prisma
-// // Utilizaremos sequelece con npm install sequelize 
-// // es este llamamos a una base de datos y hacemos la conexión por medio de SQL puro o queries
+//ORM - Object relation mapping
+//Herramientas que nos permiten mapear objetos de nuestro lenguaje de programación a tablas en bases de datos relacionales
+//Ejemplos: Sequelize, TypeORM, Prisma
+// Utilizaremos sequelece con npm install sequelize 

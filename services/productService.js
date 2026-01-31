@@ -1,4 +1,4 @@
-const ProductRepository = require('../repositories/productRepositorySQL')
+const ProductRepository = require('../repositories/productRepositoryORM')
 
 class ProductService {
     // Obtener todos los productos
