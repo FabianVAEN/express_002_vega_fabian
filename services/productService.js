@@ -1,15 +1,17 @@
-const ProductRepository = require('../repositories/productRepository')
+const ProductRepository = require('../repositories/productRepositorySQL')
 
 class ProductService {
-    findAll() {
-        const products = ProductRepository.findAll()
+    // Obtener todos los productos
+    async findAll() {
+        const products = await ProductRepository.findAll()
         return {
             products,
             total: products.length
         }
     }
 
-    searchById(id) {
+    // Buscar producto por ID
+    async searchById(id) {
         const numericId = parseInt(id)
 
         // http status 
@@ -27,7 +29,7 @@ class ProductService {
                 message: "El ID debe ser un número"
             }
         }
-        const product = ProductRepository.findById(numericId)
+        const product = await ProductRepository.findById(numericId)
         if (!product) {
             throw {
                 status: 404,
@@ -36,8 +38,32 @@ class ProductService {
         }
         return product
     }
-    create(newProduct) {
-        // CORREGIDO: Cambiar description por name
+
+    // Buscar producto por SKU
+    async searchBySKU(sku) {
+        const product = await ProductRepository.findBySku(sku)
+        if (!product) {
+            throw {
+                status: 404,
+                message: `Producto con SKU ${sku} no encontrado`
+            }
+        }
+        return product
+    }
+
+    // Buscar productos entre rangos de existencia
+    async findProductsBetweenExistence(minexistence, maxexistence) {
+        const min = parseInt(minexistence)
+        const max = parseInt(maxexistence)  
+        const products = await ProductRepository.findProductsBetweenExistence(min, max)
+        return {
+            products,
+            total: products.length
+        }
+    }
+
+    // Crear un nuevo producto
+     async create(newProduct) {
         const { name, price, stock, sku } = newProduct;
 
         if (!name || !price || !stock || !sku) {
@@ -61,7 +87,7 @@ class ProductService {
             }
         }
 
-        const existingSku = ProductRepository.findBySku(sku);
+        const existingSku =  await ProductRepository.findBySku(sku);
         if (existingSku) {
             throw {
                 status: 400,
@@ -69,7 +95,7 @@ class ProductService {
             }
         }
 
-        const savedProduct = ProductRepository.create({
+        const savedProduct =  await ProductRepository.create({
             name,  // CORREGIDO: usar name en lugar de description
             price,
             stock,
@@ -78,7 +104,8 @@ class ProductService {
         return savedProduct;
     }
 
-    update(id, productData) {
+    // Actualizar un producto existente
+    async update(id, productData) {
         const numericId = parseInt(id);
 
         if (isNaN(numericId)) {
@@ -89,7 +116,7 @@ class ProductService {
         }
 
         // Verificar que el producto existe
-        const existingProduct = ProductRepository.findById(numericId);
+        const existingProduct = await ProductRepository.findById(numericId);
         if (!existingProduct) {
             throw {
                 status: 404,
@@ -99,7 +126,7 @@ class ProductService {
 
         // Validar que si se envía SKU, no duplique uno existente (excepto el propio)
         if (productData.sku && productData.sku !== existingProduct.sku) {
-            const productWithSameSku = ProductRepository.findBySku(productData.sku);
+            const productWithSameSku = await ProductRepository.findBySku(productData.sku);
             if (productWithSameSku) {
                 throw {
                     status: 400,
@@ -128,11 +155,12 @@ class ProductService {
         }
 
         // Actualizar el producto
-        const updatedProduct = ProductRepository.update(numericId, productData);
+        const updatedProduct = await ProductRepository.update(numericId, productData);
         return updatedProduct;
     }
 
-    delete(id) {
+    // Eliminar un producto
+    async delete(id) {
         const numericId = parseInt(id);
 
         if (isNaN(numericId)) {
@@ -143,7 +171,7 @@ class ProductService {
         }
 
         // Verificar que el producto existe
-        const existingProduct = ProductRepository.findById(numericId);
+        const existingProduct = await ProductRepository.findById(numericId);
         if (!existingProduct) {
             throw {
                 status: 404,
@@ -152,7 +180,7 @@ class ProductService {
         }
 
         // Eliminar el producto
-        const deletedProduct = ProductRepository.delete(numericId);
+        const deletedProduct = await ProductRepository.delete(numericId);
         return deletedProduct;
     }
 }

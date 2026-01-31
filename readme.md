@@ -63,7 +63,6 @@ express_02/
     "name": "Nombre Actualizado",
     "price": 149.99
     }
-  
 
 ### Eliminar producto
 - DELETE http://localhost:4000/api/products/1
